@@ -2,7 +2,6 @@
 @import "tw-animate-css";
 
 /* Scan NS8 UI Library components for Tailwind classes */
-@source "../node_modules/@geniusdynamics/ns8-ui-lib/src/**/*.vue";
 
 @custom-variant dark (&:is(.dark *));
 

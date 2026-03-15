@@ -19,6 +19,7 @@ import AppMobileSideMenu from "./components/AppMobileSideMenu.vue";
 import { useAppStore } from "./store";
 import { PageTitleService, TaskService } from "@geniusdynamics/ns8-ui-lib";
 import { useRoute } from "vue-router";
+import metadata from "./../public/metadata.json";
 
 const store = useAppStore();
 const route = useRoute();
@@ -54,14 +55,7 @@ onMounted(async () => {
   }
 
   // Set app name from metadata
-  try {
-    const response = await fetch("/metadata.json");
-    const metadata = await response.json();
-    store.setAppNameInStore(metadata.name);
-  } catch (error) {
-    console.error("Failed to load metadata:", error);
-    store.setAppNameInStore("example");
-  }
+  store.setAppNameInStore(metadata.name);
 
   // Listen to change route events
   window.addEventListener("message", (event) => {
@@ -111,7 +105,7 @@ async function getInstanceLabel(instanceName: string) {
   flex: 1;
   margin-left: 16rem;
   padding: 1.5rem;
-  background-color: hsl(var(--background));
+  background-color: var(--background);
   min-height: 100vh;
 }
 
