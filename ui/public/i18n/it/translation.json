@@ -1,0 +1,72 @@
+{
+  "common": {
+    "required": "Richiesto",
+    "work_in_progress": "Lavoro in corso",
+    "processing": "Elaborazione..."
+  },
+  "status": {
+    "title": "Stato",
+    "app_instance": "Istanza applicazione",
+    "services": "Servizio | Servizi",
+    "app_images": "Immagine app | Immagini app",
+    "app_volumes": "Volume app | Volumi app",
+    "installation_node": "Nodo di installazione",
+    "node": "Nodo",
+    "name": "Nome",
+    "size": "Dimensione",
+    "created": "Creato",
+    "mount": "Mount",
+    "no_services": "Nessun servizio",
+    "no_images": "Nessuna immagine",
+    "no_volumes": "Nessun volume",
+    "example_webapp": "Webapp example",
+    "not_configured": "Non configurato",
+    "open_webapp": "Apri example",
+    "configure": "Configura"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "configure_instance": "Configura {instance}",
+    "save": "Salva",
+    "example_fqdn": "Hostname example (FQDN)",
+    "lets_encrypt": "Richiedi certificato LE",
+    "http_to_https": "Forza HTTPS",
+    "enabled": "Abilitato",
+    "disabled": "Disabilitato",
+    "advanced": "Avanzate",
+    "configuring": "Configurazione in corso",
+    "instance_configuration": "Configura example",
+    "domain_already_used_in_traefik": "Dominio già utilizzato in traefik",
+    "host_pattern": "Deve essere un nome di dominio completo valido",
+    "host_format": "Deve essere un nome di dominio completo valido"
+  },
+  "about": {
+    "title": "Informazioni"
+  },
+  "task": {
+    "cannot_create_task": "Impossibile creare l'attività {action}"
+  },
+  "action": {
+    "get-status": "Ottieni stato",
+    "get-configuration": "Ottieni configurazione",
+    "configure-module": "Configura modulo",
+    "get-module-info": "Ottieni info modulo",
+    "get-name": "Ottieni nome",
+    "list-backup-repositories": "Elenca repository backup",
+    "list-backups": "Elenca backup",
+    "list-installed-modules": "Elenca moduli installati"
+  },
+  "error": {
+    "error": "Errore",
+    "generic_error": "Qualcosa è andato storto",
+    "validation_error": "Errore di validazione",
+    "network_error": "Errore di rete",
+    "network_timeout": "Timeout di rete",
+    "401": "Autenticazione non valida",
+    "403": "Operazione non autorizzata",
+    "404": "Risorsa non trovata",
+    "cannot_retrieve_module_info": "Impossibile recuperare le informazioni del modulo",
+    "cannot_retrieve_installed_modules": "Impossibile recuperare i moduli installati",
+    "cannot_retrieve_configuration": "Impossibile recuperare la configurazione"
+  }
+}

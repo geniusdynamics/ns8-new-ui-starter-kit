@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "description": {
+    "en": "NS8 Example Module"
+  },
+  "categories": ["system"],
+  "authors": [
+    {
+      "name": "Nethesis",
+      "email": "support@nethesis.it"
+    }
+  ],
+  "docs": {
+    "documentation_url": "https://docs.nethserver.org/",
+    "bug_url": "https://github.com/NethServer/ns8-ui-lib/issues",
+    "code_url": "https://github.com/NethServer/ns8-ui-lib"
+  },
+  "source": "ghcr.io/nethserver/example"
+}

@@ -1,0 +1,72 @@
+{
+  "common": {
+    "required": "Obrigatório",
+    "work_in_progress": "Trabalho em progresso",
+    "processing": "Processando..."
+  },
+  "status": {
+    "title": "Status",
+    "app_instance": "Instância do aplicativo",
+    "services": "Serviço | Serviços",
+    "app_images": "Imagem do app | Imagens do app",
+    "app_volumes": "Volume do app | Volumes do app",
+    "installation_node": "Nó de instalação",
+    "node": "Nó",
+    "name": "Nome",
+    "size": "Tamanho",
+    "created": "Criado",
+    "mount": "Montagem",
+    "no_services": "Sem serviços",
+    "no_images": "Sem imagens",
+    "no_volumes": "Sem volumes",
+    "example_webapp": "Webapp example",
+    "not_configured": "Não configurado",
+    "open_webapp": "Abrir example",
+    "configure": "Configurar"
+  },
+  "settings": {
+    "title": "Configurações",
+    "configure_instance": "Configurar {instance}",
+    "save": "Salvar",
+    "example_fqdn": "Hostname example (FQDN)",
+    "lets_encrypt": "Solicitar certificado LE",
+    "http_to_https": "Forçar HTTPS",
+    "enabled": "Habilitado",
+    "disabled": "Desabilitado",
+    "advanced": "Avançado",
+    "configuring": "Configurando",
+    "instance_configuration": "Configurar example",
+    "domain_already_used_in_traefik": "Domínio já usado no traefik",
+    "host_pattern": "Deve ser um nome de domínio totalmente qualificado válido",
+    "host_format": "Deve ser um nome de domínio totalmente qualificado válido"
+  },
+  "about": {
+    "title": "Sobre"
+  },
+  "task": {
+    "cannot_create_task": "Não é possível criar a tarefa {action}"
+  },
+  "action": {
+    "get-status": "Obter status",
+    "get-configuration": "Obter configuração",
+    "configure-module": "Configurar módulo",
+    "get-module-info": "Obter info do módulo",
+    "get-name": "Obter nome",
+    "list-backup-repositories": "Listar repositórios de backup",
+    "list-backups": "Listar backups",
+    "list-installed-modules": "Listar módulos instalados"
+  },
+  "error": {
+    "error": "Erro",
+    "generic_error": "Algo deu errado",
+    "validation_error": "Erro de validação",
+    "network_error": "Erro de rede",
+    "network_timeout": "Timeout de rede",
+    "401": "Autenticação inválida",
+    "403": "Operação não autorizada",
+    "404": "Recurso não encontrado",
+    "cannot_retrieve_module_info": "Não é possível recuperar as informações do módulo",
+    "cannot_retrieve_installed_modules": "Não é possível recuperar os módulos instalados",
+    "cannot_retrieve_configuration": "Não é possível recuperar a configuração"
+  }
+}
