@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@geniusdynamics/ns8-ui-lib": "^1.0.4",
+    "@geniusdynamics/ns8-ui-lib": "^1.0.7",
     "@nethesis/vue-components": "^3.6.0",
     "axios": "^1.13.6",
     "date-fns": "^4.1.0",
