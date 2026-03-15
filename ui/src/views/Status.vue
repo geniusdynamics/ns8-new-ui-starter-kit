@@ -113,7 +113,7 @@
 
     <!-- Images section -->
     <div class="section-header">
-      <h4>{{ $tc("status.app_images", 2) }}</h4>
+      <h4>{{ $t("status.app_images", { n: 2 }) }}</h4>
     </div>
     <div class="data-table-container">
       <NSEmptyState
@@ -135,7 +135,7 @@
 
     <!-- Volumes section -->
     <div class="section-header">
-      <h4>{{ $tc("status.app_volumes", 2) }}</h4>
+      <h4>{{ $t("status.app_volumes", { n: 2 }) }}</h4>
     </div>
     <div class="data-table-container">
       <NSEmptyState
@@ -186,7 +186,7 @@ const {
 } = useTaskService();
 const { getPage } = useQueryParamService();
 const { setPageTitle } = usePageTitleService();
-const { t, tc } = useI18n();
+const { t } = useI18n();
 
 // Data
 const host = ref("");
