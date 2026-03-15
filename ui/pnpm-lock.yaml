@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@geniusdynamics/ns8-ui-lib':
-        specifier: ^1.0.8
-        version: 1.0.8(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))
+        specifier: ^1.0.9
+        version: 1.0.9(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))
       '@nethesis/vue-components':
         specifier: ^3.6.0
         version: 3.6.0(tailwindcss@4.2.1)(typescript@5.9.3)(vite@8.0.0(@types/node@25.5.0)(esbuild@0.27.2)(jiti@2.6.1)(yaml@2.8.2))
@@ -316,8 +316,8 @@ packages:
       '@fortawesome/fontawesome-svg-core': ~1 || ~6 || ~7
       vue: '>= 3.0.0 < 4'
 
-  '@geniusdynamics/ns8-ui-lib@1.0.8':
-    resolution: {integrity: sha512-2ICIstiO3xxU4g5ixBIb1erstmMblA9v06lj6/hPHE2Q82BOu9emlLITAPEO9mPANCgAJ8o95Y2IcWE1We6xlg==}
+  '@geniusdynamics/ns8-ui-lib@1.0.9':
+    resolution: {integrity: sha512-KU05BeozlmlM5cL1kY/UY9AvQ2vxRJv/0KE45mOr5s8h3Pu1lVScw3C1aY6Zsr4lFeFP+8wQ4qP2vQWfs4qwQQ==}
     engines: {node: '>=18'}
     peerDependencies:
       lucide-vue-next: ^0.562.0
@@ -1659,7 +1659,7 @@ snapshots:
       '@fortawesome/fontawesome-svg-core': 6.7.2
       vue: 3.5.30(typescript@5.9.3)
 
-  '@geniusdynamics/ns8-ui-lib@1.0.8(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))':
+  '@geniusdynamics/ns8-ui-lib@1.0.9(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))':
     dependencies:
       '@tanstack/vue-table': 8.21.3(vue@3.5.30(typescript@5.9.3))
       '@vee-validate/zod': 4.15.1(vue@3.5.30(typescript@5.9.3))(zod@3.25.76)
