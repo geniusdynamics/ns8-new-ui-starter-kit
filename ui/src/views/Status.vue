@@ -400,7 +400,7 @@ onMounted(async () => {
 .page-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
   margin: 0;
 }
 
@@ -421,13 +421,13 @@ onMounted(async () => {
   margin-top: 1.5rem;
   margin-bottom: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid hsl(var(--border));
+  border-top: 1px solid var(--border);
 }
 
 .section-header h4 {
   font-size: 1.125rem;
   font-weight: 500;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
   margin: 0;
 }
 
@@ -443,8 +443,8 @@ onMounted(async () => {
 }
 
 .skeleton-card {
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background-color: var(--card);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 1.5rem;
 }
@@ -452,7 +452,7 @@ onMounted(async () => {
 .skeleton-title {
   height: 1.5rem;
   width: 60%;
-  background-color: hsl(var(--muted));
+  background-color: var(--muted);
   border-radius: 0.25rem;
   margin-bottom: 1rem;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -460,7 +460,7 @@ onMounted(async () => {
 
 .skeleton-content {
   height: 4rem;
-  background-color: hsl(var(--muted));
+  background-color: var(--muted);
   border-radius: 0.25rem;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -471,7 +471,7 @@ onMounted(async () => {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: hsl(var(--primary));
+  color: var(--primary);
   background: transparent;
   border: 1px solid transparent;
   border-radius: 0.375rem;
@@ -480,7 +480,7 @@ onMounted(async () => {
 }
 
 .btn-ghost:hover {
-  background-color: hsl(var(--accent));
+  background-color: var(--accent);
 }
 
 @keyframes pulse {

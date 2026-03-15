@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+html,
+body,
+#ns8-app {
+  height: 100%;
+  margin: 0;
+}
+
 /* Scan NS8 UI Library components for Tailwind classes */
 
 @custom-variant dark (&:is(.dark *));

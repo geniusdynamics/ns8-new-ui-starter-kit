@@ -8,9 +8,8 @@ import axios from "axios";
 import router from "./router";
 import App from "./App.vue";
 import i18n, { loadLanguage } from "./i18n";
-import "./style.css";
-
 import "@geniusdynamics/ns8-ui-lib/dist/ns8-ui-lib.css";
+import "./style.css";
 // Configure axios defaults
 axios.defaults.timeout = 10000;
 

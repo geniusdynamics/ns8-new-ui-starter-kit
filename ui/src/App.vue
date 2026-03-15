@@ -98,15 +98,18 @@ async function getInstanceLabel(instanceName: string) {
 <style>
 #ns8-app {
   display: flex;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 .app-content {
   flex: 1;
+  width: 100%;
   margin-left: 16rem;
   padding: 1.5rem;
   background-color: var(--background);
-  min-height: 100vh;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {

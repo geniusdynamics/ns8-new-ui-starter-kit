@@ -2,10 +2,142 @@
   Copyright (C) 2023 Nethesis S.r.l.
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useAppStore } from "@/store";
+import {
+  NSInlineNotification,
+  NSTextInput,
+  NSToggle,
+} from "@geniusdynamics/ns8-ui-lib";
+import {
+  useTaskService,
+  usePageTitleService,
+} from "@geniusdynamics/ns8-ui-lib";
+import { useI18n } from "vue-i18n";
+
+const store = useAppStore();
+const { createModuleTaskForApp, createErrorNotificationForApp } =
+  useTaskService();
+const { setPageTitle } = usePageTitleService();
+const { t } = useI18n();
+
+// Form data
+const host = ref("");
+const isLetsEncryptEnabled = ref(false);
+const isHttpToHttpsEnabled = ref(true);
+const toggleAccordion = ref(false);
+
+// Loading states
+const loading = ref({
+  getConfiguration: false,
+  configureModule: false,
+});
+
+// Error states
+const error = ref({
+  getConfiguration: "",
+  configureModule: "",
+  host: "",
+  lets_encrypt: "",
+  http2https: "",
+});
+
+// Validation
+const validateConfigureModule = () => {
+  clearErrors();
+
+  let isValidationOk = true;
+  if (!host.value) {
+    error.value.host = "common.required";
+    isValidationOk = false;
+  }
+  return isValidationOk;
+};
+
+const clearErrors = () => {
+  error.value.host = "";
+  error.value.lets_encrypt = "";
+  error.value.http2https = "";
+  error.value.configureModule = "";
+};
+
+// Methods
+async function getConfiguration() {
+  loading.value.getConfiguration = true;
+  error.value.getConfiguration = "";
+
+  const taskAction = "get-configuration";
+  try {
+    await createModuleTaskForApp(store.instanceName, {
+      action: taskAction,
+      extra: {
+        title: "Get Configuration",
+        isNotificationHidden: true,
+      },
+    });
+
+    // For demo purposes, set sample data
+    host.value = "example.example.org";
+    isLetsEncryptEnabled.value = false;
+    isHttpToHttpsEnabled.value = true;
+  } catch (err) {
+    console.error(`Error creating task ${taskAction}`, err);
+    error.value.getConfiguration = "Failed to retrieve configuration";
+    createErrorNotificationForApp(err, "Failed to get configuration");
+  } finally {
+    loading.value.getConfiguration = false;
+  }
+}
+
+async function configureModule() {
+  clearErrors();
+
+  const isValidationOk = validateConfigureModule();
+  if (!isValidationOk) {
+    return;
+  }
+
+  loading.value.configureModule = true;
+  error.value.configureModule = "";
+
+  const taskAction = "configure-module";
+  try {
+    await createModuleTaskForApp(store.instanceName, {
+      action: taskAction,
+      data: {
+        host: host.value,
+        lets_encrypt: isLetsEncryptEnabled.value,
+        http2https: isHttpToHttpsEnabled.value,
+      },
+      extra: {
+        title: t("settings.instance_configuration", {
+          instance: store.instanceName,
+        }),
+        description: t("settings.configuring"),
+      },
+    });
+
+    // Reload configuration after successful configuration
+    await getConfiguration();
+  } catch (err) {
+    console.error(`Error creating task ${taskAction}`, err);
+    error.value.configureModule = "Failed to configure module";
+    createErrorNotificationForApp(err, "Failed to configure module");
+  } finally {
+    loading.value.configureModule = false;
+  }
+}
+
+onMounted(async () => {
+  setPageTitle(`${t("settings.title")} - ${store.appName}`);
+  await getConfiguration();
+});
+</script>
 <template>
   <div class="settings-view">
     <div class="page-header">
-      <h2>{{ $t('settings.title') }}</h2>
+      <h2>{{ $t("settings.title") }}</h2>
     </div>
 
     <!-- Error notification -->
@@ -52,8 +184,10 @@
             class="accordion-toggle"
             @click="toggleAccordion = !toggleAccordion"
           >
-            <span>{{ $t('settings.advanced') }}</span>
-            <span class="toggle-icon" :class="{ 'open': toggleAccordion }">▼</span>
+            <span>{{ $t("settings.advanced") }}</span>
+            <span class="toggle-icon" :class="{ open: toggleAccordion }"
+              >▼</span
+            >
           </button>
           <div v-show="toggleAccordion" class="accordion-content">
             <!-- Advanced options can be added here -->
@@ -76,142 +210,16 @@
             class="btn-primary"
             :disabled="loading.getConfiguration || loading.configureModule"
           >
-            <span v-if="loading.configureModule">{{ $t('common.processing') }}</span>
-            <span v-else>{{ $t('settings.save') }}</span>
+            <span v-if="loading.configureModule">{{
+              $t("common.processing")
+            }}</span>
+            <span v-else>{{ $t("settings.save") }}</span>
           </button>
         </div>
       </form>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useAppStore } from '@/store'
-import {
-  NSInlineNotification,
-  NSTextInput,
-  NSToggle
-} from '@geniusdynamics/ns8-ui-lib'
-import {
-  useTaskService,
-  usePageTitleService
-} from '@geniusdynamics/ns8-ui-lib'
-
-const store = useAppStore()
-const { createModuleTaskForApp, createErrorNotificationForApp } = useTaskService()
-const { setPageTitle } = usePageTitleService()
-
-// Form data
-const host = ref('')
-const isLetsEncryptEnabled = ref(false)
-const isHttpToHttpsEnabled = ref(true)
-const toggleAccordion = ref(false)
-
-// Loading states
-const loading = ref({
-  getConfiguration: false,
-  configureModule: false
-})
-
-// Error states
-const error = ref({
-  getConfiguration: '',
-  configureModule: '',
-  host: '',
-  lets_encrypt: '',
-  http2https: ''
-})
-
-// Validation
-const validateConfigureModule = () => {
-  clearErrors()
-  
-  let isValidationOk = true
-  if (!host.value) {
-    error.value.host = 'common.required'
-    isValidationOk = false
-  }
-  return isValidationOk
-}
-
-const clearErrors = () => {
-  error.value.host = ''
-  error.value.lets_encrypt = ''
-  error.value.http2https = ''
-  error.value.configureModule = ''
-}
-
-// Methods
-async function getConfiguration() {
-  loading.value.getConfiguration = true
-  error.value.getConfiguration = ''
-  
-  try {
-    const taskAction = 'get-configuration'
-    await createModuleTaskForApp(store.instanceName, {
-      action: taskAction,
-      extra: {
-        title: 'Get Configuration',
-        isNotificationHidden: true
-      }
-    })
-    
-    // For demo purposes, set sample data
-    host.value = 'example.example.org'
-    isLetsEncryptEnabled.value = false
-    isHttpToHttpsEnabled.value = true
-  } catch (err) {
-    console.error(`Error creating task ${taskAction}`, err)
-    error.value.getConfiguration = 'Failed to retrieve configuration'
-    createErrorNotificationForApp(err, 'Failed to get configuration')
-  } finally {
-    loading.value.getConfiguration = false
-  }
-}
-
-async function configureModule() {
-  clearErrors()
-  
-  const isValidationOk = validateConfigureModule()
-  if (!isValidationOk) {
-    return
-  }
-  
-  loading.value.configureModule = true
-  error.value.configureModule = ''
-  
-  try {
-    const taskAction = 'configure-module'
-    await createModuleTaskForApp(store.instanceName, {
-      action: taskAction,
-      data: {
-        host: host.value,
-        lets_encrypt: isLetsEncryptEnabled.value,
-        http2https: isHttpToHttpsEnabled.value
-      },
-      extra: {
-        title: $t('settings.instance_configuration', { instance: store.instanceName }),
-        description: $t('settings.configuring')
-      }
-    })
-    
-    // Reload configuration after successful configuration
-    await getConfiguration()
-  } catch (err) {
-    console.error(`Error creating task ${taskAction}`, err)
-    error.value.configureModule = 'Failed to configure module'
-    createErrorNotificationForApp(err, 'Failed to configure module')
-  } finally {
-    loading.value.configureModule = false
-  }
-}
-
-onMounted(async () => {
-  setPageTitle(`${$t('settings.title')} - ${store.appName}`)
-  await getConfiguration()
-})
-</script>
 
 <style scoped>
 .settings-view {
