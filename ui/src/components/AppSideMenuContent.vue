@@ -42,27 +42,19 @@
 <script setup lang="ts">
 import { Activity, Settings, Info } from 'lucide-vue-next'
 import { useAppStore } from '@/store'
-import { useQueryParamService } from '@geniusdynamics/ns8-ui-lib'
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const store = useAppStore()
 const route = useRoute()
-const { getPage } = useQueryParamService()
+const router = useRouter()
 
 const isLinkActive = (page: string) => {
   return route.path === `/${page}` || (page === 'status' && route.path === '/')
 }
 
 const goToAppPage = (page: string) => {
-  const instanceName = store.instanceName || 'example'
-  window.parent.postMessage(
-    {
-      type: 'changeRoute',
-      payload: { page, instanceName }
-    },
-    '*'
-  )
+  router.push(`/${page}`)
 }
 </script>
 
@@ -76,15 +68,15 @@ const goToAppPage = (page: string) => {
   margin-bottom: 1rem;
   font-weight: 600;
   font-size: 0.875rem;
-  color: hsl(var(--foreground));
-  border-bottom: 1px solid hsl(var(--border));
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .skeleton {
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -101,7 +93,7 @@ const goToAppPage = (page: string) => {
   padding: 0.75rem 1rem;
   border-radius: 0.375rem;
   font-size: 0.875rem;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -111,11 +103,11 @@ const goToAppPage = (page: string) => {
 }
 
 .side-nav-link:hover {
-  background-color: hsl(var(--accent));
+  background-color: var(--accent);
 }
 
 .side-nav-link.current-page {
-  background-color: hsl(var(--accent));
+  background-color: var(--accent);
   font-weight: 500;
 }
 

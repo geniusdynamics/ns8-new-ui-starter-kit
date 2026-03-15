@@ -46,8 +46,8 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: hsl(var(--background));
-  border-right: 1px solid hsl(var(--border));
+  background-color: var(--background);
+  border-right: 1px solid var(--border);
   z-index: 1000;
   overflow-y: auto;
 }
