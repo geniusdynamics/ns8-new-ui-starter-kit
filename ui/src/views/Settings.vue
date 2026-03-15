@@ -135,9 +135,10 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="settings-view">
-    <div class="page-header">
-      <h2>{{ $t("settings.title") }}</h2>
+  <div class="w-full max-w-xl p-6 space-y-6">
+    <!-- Page Header -->
+    <div class="space-y-1">
+      <h2 class="text-2xl font-semibold tracking-tight">{{ $t("settings.title") }}</h2>
     </div>
 
     <!-- Error notification -->
@@ -149,47 +150,59 @@ onMounted(async () => {
       :show-close-button="false"
     />
 
-    <!-- Settings form -->
-    <div class="settings-card">
-      <form @submit.prevent="configureModule" class="settings-form">
-        <NSTextInput
-          v-model="host"
-          :label="$t('settings.example_fqdn')"
-          placeholder="example.example.org"
-          :error-message="error.host ? $t(error.host) : ''"
-          :disabled="loading.getConfiguration || loading.configureModule"
-          required
-        />
+    <!-- Settings form card -->
+    <div class="bg-card border rounded-lg p-6">
+      <form @submit.prevent="configureModule" class="space-y-6">
+        <!-- Host input -->
+        <div>
+          <label class="text-sm font-medium mb-2 block">
+            {{ $t("settings.example_fqdn") }}
+          </label>
+          <NSTextInput
+            v-model="host"
+            placeholder="example.example.org"
+            :error-message="error.host ? $t(error.host) : ''"
+            :disabled="loading.getConfiguration || loading.configureModule"
+            required
+          />
+        </div>
 
-        <NSToggle
-          v-model:checked="isLetsEncryptEnabled"
-          :label="$t('settings.lets_encrypt')"
-          :left-text="$t('settings.disabled')"
-          :right-text="$t('settings.enabled')"
-          :disabled="loading.getConfiguration || loading.configureModule"
-        />
+        <!-- Toggle switches -->
+        <div class="space-y-4">
+          <NSToggle
+            v-model:checked="isLetsEncryptEnabled"
+            :label="$t('settings.lets_encrypt')"
+            :left-text="$t('settings.disabled')"
+            :right-text="$t('settings.enabled')"
+            :disabled="loading.getConfiguration || loading.configureModule"
+          />
 
-        <NSToggle
-          v-model:checked="isHttpToHttpsEnabled"
-          :label="$t('settings.http_to_https')"
-          :left-text="$t('settings.disabled')"
-          :right-text="$t('settings.enabled')"
-          :disabled="loading.getConfiguration || loading.configureModule"
-        />
+          <NSToggle
+            v-model:checked="isHttpToHttpsEnabled"
+            :label="$t('settings.http_to_https')"
+            :left-text="$t('settings.disabled')"
+            :right-text="$t('settings.enabled')"
+            :disabled="loading.getConfiguration || loading.configureModule"
+          />
+        </div>
 
         <!-- Advanced section -->
-        <div class="advanced-section">
+        <div class="border rounded-md">
           <button
             type="button"
-            class="accordion-toggle"
+            class="w-full flex justify-between items-center px-4 py-3 text-sm font-medium hover:bg-accent transition-colors"
             @click="toggleAccordion = !toggleAccordion"
           >
             <span>{{ $t("settings.advanced") }}</span>
-            <span class="toggle-icon" :class="{ open: toggleAccordion }"
-              >▼</span
-            >
+            <span
+              class="transition-transform duration-200"
+              :class="{ 'rotate-180': toggleAccordion }"
+            >▼</span>
           </button>
-          <div v-show="toggleAccordion" class="accordion-content">
+          <div
+            v-show="toggleAccordion"
+            class="px-4 py-3 border-t"
+          >
             <!-- Advanced options can be added here -->
           </div>
         </div>
@@ -204,15 +217,15 @@ onMounted(async () => {
         />
 
         <!-- Submit button -->
-        <div class="form-actions">
+        <div class="flex justify-end">
           <button
             type="submit"
-            class="btn-primary"
+            class="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             :disabled="loading.getConfiguration || loading.configureModule"
           >
-            <span v-if="loading.configureModule">{{
-              $t("common.processing")
-            }}</span>
+            <span v-if="loading.configureModule">
+              {{ $t("common.processing") }}
+            </span>
             <span v-else>{{ $t("settings.save") }}</span>
           </button>
         </div>
@@ -222,98 +235,5 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.settings-view {
-  width: 100%;
-  max-width: 38rem;
-}
-
-.page-header {
-  margin-bottom: 1.5rem;
-}
-
-.page-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: hsl(var(--foreground));
-  margin: 0;
-}
-
-.settings-card {
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-}
-
-.settings-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.advanced-section {
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.375rem;
-}
-
-.accordion-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: hsl(var(--foreground));
-}
-
-.accordion-toggle:hover {
-  background-color: hsl(var(--accent));
-}
-
-.toggle-icon {
-  transition: transform 0.2s;
-}
-
-.toggle-icon.open {
-  transform: rotate(180deg);
-}
-
-.accordion-content {
-  padding: 1rem;
-  border-top: 1px solid hsl(var(--border));
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: hsl(var(--primary-foreground));
-  background-color: hsl(var(--primary));
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: hsl(var(--primary) / 0.9);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+/* All styles converted to Tailwind */
 </style>

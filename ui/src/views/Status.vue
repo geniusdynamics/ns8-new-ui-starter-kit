@@ -10,7 +10,6 @@ import { useAppStore } from "@/store";
 import {
   NSInlineNotification,
   NSSystemInfoCard,
-  NSSystemdServiceCard,
   NSBackupCard,
   NSEmptyState,
   NSDataTable,
@@ -20,6 +19,10 @@ import {
   usePageTitleService,
   useUtilService,
 } from "@geniusdynamics/ns8-ui-lib";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Play, Square, RotateCcw } from "lucide-vue-next";
 
 const store = useAppStore();
 const router = useRouter();
@@ -314,9 +317,12 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="status-view">
-    <div class="page-header">
-      <h2>{{ $t("status.title") }}</h2>
+  <div class="w-full p-6 space-y-6">
+    <!-- Page Header -->
+    <div class="space-y-1">
+      <h2 class="text-2xl font-semibold tracking-tight">
+        {{ $t("status.title") }}
+      </h2>
     </div>
 
     <!-- Error notifications -->
@@ -343,13 +349,13 @@ onMounted(async () => {
     />
 
     <!-- Info cards grid -->
-    <div class="cards-grid">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <!-- Webapp Card -->
       <NSSystemInfoCard
         :title="host || $t('status.not_configured')"
         :description="$t('status.example_webapp')"
         light
-        class="info-card"
+        class="min-h-[150px]"
       >
         <template #actions>
           <button v-if="host" class="btn-ghost" @click="goToWebapp">
@@ -366,7 +372,7 @@ onMounted(async () => {
         :title="status.instance || '-'"
         :description="$t('status.app_instance')"
         light
-        class="info-card"
+        class="min-h-[150px]"
       />
 
       <!-- Installation Node Card -->
@@ -374,7 +380,7 @@ onMounted(async () => {
         :title="installationNodeTitle"
         :description="$t('status.installation_node')"
         light
-        class="info-card"
+        class="min-h-[150px]"
       />
 
       <!-- Backup Card -->
@@ -382,7 +388,7 @@ onMounted(async () => {
         :backups="backups"
         :loading="loading.listBackups || loading.listBackupRepositories"
         light
-        class="backup-card"
+        class="min-h-[150px]"
         no-backup-message="No backup configured"
         @backup="handleBackup"
         @restore="handleRestore"
@@ -391,185 +397,99 @@ onMounted(async () => {
     </div>
 
     <!-- Services section -->
-    <div class="section-header">
-      <h4>{{ $t("status.services") }}</h4>
-    </div>
-    <div v-if="!loading.getStatus" class="cards-grid">
-      <NSEmptyState
-        v-if="!status.services?.length"
-        :title="$t('status.no_services')"
-      />
-      <NSSystemdServiceCard
-        v-for="(service, index) in status.services"
-        :key="index"
-        :service-name="service.name"
-        :status="{
-          running: service.active,
-          enabled: service.enabled,
-          status: service.active ? 'Running' : 'Stopped',
-        }"
-        light
-        class="service-card"
-        @start="handleServiceStart"
-        @stop="handleServiceStop"
-        @restart="handleServiceRestart"
-      />
-    </div>
-    <div v-else class="loading-grid">
-      <div class="skeleton-card" v-for="n in 2" :key="n">
-        <div class="skeleton-title"></div>
-        <div class="skeleton-content"></div>
+    <div class="pt-4 border-t">
+      <h4 class="text-lg font-medium mb-4">{{ $t("status.services") }}</h4>
+      <div
+        v-if="!loading.getStatus"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        <NSEmptyState
+          v-if="!status.services?.length"
+          :title="$t('status.no_services')"
+        />
+        <Card
+          v-for="(service, index) in status.services"
+          :key="index"
+          class="min-h-[150px]"
+        >
+          <CardHeader class="pb-2">
+            <div class="flex justify-between items-start gap-3">
+              <CardTitle class="text-base font-semibold">{{
+                service.name
+              }}</CardTitle>
+              <div class="flex gap-2 flex-shrink-0">
+                <Badge :variant="service.active ? 'default' : 'secondary'">
+                  {{ service.active ? "Running" : "Stopped" }}
+                </Badge>
+                <Badge :variant="service.enabled ? 'outline' : 'destructive'">
+                  {{ service.enabled ? "Enabled" : "Disabled" }}
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent></CardContent>
+        </Card>
+      </div>
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          v-for="n in 2"
+          :key="n"
+          class="min-h-[150px] bg-card border rounded-lg p-6"
+        >
+          <div class="h-6 w-3/5 bg-muted rounded animate-pulse mb-4"></div>
+          <div class="h-16 bg-muted rounded animate-pulse"></div>
+        </div>
       </div>
     </div>
 
     <!-- Images section -->
-    <div class="section-header">
-      <h4>{{ $t("status.app_images", { n: 2 }) }}</h4>
-    </div>
-    <div class="data-table-container">
-      <NSEmptyState
-        v-if="!loading.getStatus && !status.images?.length"
-        :title="$t('status.no_images')"
-      />
-      <NSDataTable
-        v-else-if="status.images?.length"
-        :data="status.images"
-        :columns="[
-          { key: 'name', label: $t('status.name') },
-          { key: 'size', label: $t('status.size') },
-          { key: 'created', label: $t('status.created') },
-        ]"
-        :loading="loading.getStatus"
-        :striped="true"
-      />
+    <div class="pt-4 border-t">
+      <h4 class="text-lg font-medium mb-4">
+        {{ $t("status.app_images", { n: 2 }) }}
+      </h4>
+      <div class="rounded-lg border">
+        <NSEmptyState
+          v-if="!loading.getStatus && !status.images?.length"
+          :title="$t('status.no_images')"
+        />
+        <NSDataTable
+          v-else-if="status.images?.length"
+          :data="status.images"
+          :columns="[
+            { key: 'name', label: $t('status.name') },
+            { key: 'size', label: $t('status.size') },
+            { key: 'created', label: $t('status.created') },
+          ]"
+          :loading="loading.getStatus"
+          :striped="true"
+        />
+      </div>
     </div>
 
     <!-- Volumes section -->
-    <div class="section-header">
-      <h4>{{ $t("status.app_volumes", { n: 2 }) }}</h4>
-    </div>
-    <div class="data-table-container">
-      <NSEmptyState
-        v-if="!loading.getStatus && !status.volumes?.length"
-        :title="$t('status.no_volumes')"
-      />
-      <NSDataTable
-        v-else-if="status.volumes?.length"
-        :data="status.volumes"
-        :columns="[
-          { key: 'name', label: $t('status.name') },
-          { key: 'mount', label: $t('status.mount') },
-          { key: 'created', label: $t('status.created') },
-        ]"
-        :loading="loading.getStatus"
-        :striped="true"
-      />
+    <div class="pt-4 border-t">
+      <h4 class="text-lg font-medium mb-4">
+        {{ $t("status.app_volumes", { n: 2 }) }}
+      </h4>
+      <div class="rounded-lg border">
+        <NSEmptyState
+          v-if="!loading.getStatus && !status.volumes?.length"
+          :title="$t('status.no_volumes')"
+        />
+        <NSDataTable
+          v-else-if="status.volumes?.length"
+          :data="status.volumes"
+          :columns="[
+            { key: 'name', label: $t('status.name') },
+            { key: 'mount', label: $t('status.mount') },
+            { key: 'created', label: $t('status.created') },
+          ]"
+          :loading="loading.getStatus"
+          :striped="true"
+        />
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.status-view {
-  width: 100%;
-}
-
-.page-header {
-  margin-bottom: 1.5rem;
-}
-
-.page-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--foreground);
-  margin: 0;
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.info-card,
-.backup-card,
-.service-card {
-  min-height: 150px;
-}
-
-.section-header {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.section-header h4 {
-  font-size: 1.125rem;
-  font-weight: 500;
-  color: var(--foreground);
-  margin: 0;
-}
-
-.data-table-container {
-  margin-bottom: 1.5rem;
-}
-
-.loading-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.skeleton-card {
-  background-color: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-}
-
-.skeleton-title {
-  height: 1.5rem;
-  width: 60%;
-  background-color: var(--muted);
-  border-radius: 0.25rem;
-  margin-bottom: 1rem;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.skeleton-content {
-  height: 4rem;
-  background-color: var(--muted);
-  border-radius: 0.25rem;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--primary);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-ghost:hover {
-  background-color: var(--accent);
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-</style>
+<style scoped></style>
