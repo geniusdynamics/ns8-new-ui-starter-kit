@@ -9,14 +9,26 @@ importers:
   .:
     dependencies:
       '@geniusdynamics/ns8-ui-lib':
-        specifier: ^1.0.7
-        version: 1.0.7(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))
+        specifier: ^1.0.8
+        version: 1.0.8(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))
       '@nethesis/vue-components':
         specifier: ^3.6.0
         version: 3.6.0(tailwindcss@4.2.1)(typescript@5.9.3)(vite@8.0.0(@types/node@25.5.0)(esbuild@0.27.2)(jiti@2.6.1)(yaml@2.8.2))
+      '@tanstack/vue-table':
+        specifier: ^8.21.3
+        version: 8.21.3(vue@3.5.30(typescript@5.9.3))
+      '@vueuse/core':
+        specifier: ^14.2.1
+        version: 14.2.1(vue@3.5.30(typescript@5.9.3))
       axios:
         specifier: ^1.13.6
         version: 1.13.6
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -26,15 +38,21 @@ importers:
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3))
-      tw-animate-css:
-        specifier: ^1.4.0
-        version: 1.4.0
+      reka-ui:
+        specifier: ^2.9.2
+        version: 2.9.2(vue@3.5.30(typescript@5.9.3))
+      tailwind-merge:
+        specifier: ^3.5.0
+        version: 3.5.0
       vue:
         specifier: ^3.5.30
         version: 3.5.30(typescript@5.9.3)
       vue-i18n:
         specifier: ^11.3.0
         version: 11.3.0(vue@3.5.30(typescript@5.9.3))
+      vue-input-otp:
+        specifier: ^0.3.2
+        version: 0.3.2(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3))
       vue-router:
         specifier: ^5.0.3
         version: 5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))
@@ -60,6 +78,9 @@ importers:
       tailwindcss:
         specifier: ^4.2.1
         version: 4.2.1
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -295,8 +316,8 @@ packages:
       '@fortawesome/fontawesome-svg-core': ~1 || ~6 || ~7
       vue: '>= 3.0.0 < 4'
 
-  '@geniusdynamics/ns8-ui-lib@1.0.7':
-    resolution: {integrity: sha512-j1ZnUc6o5NR7r2Z4diOwPz0ufEOt0tSXGC3e4hk1ryNlYKK8B+QCzCNk+CWYX+P5LtEkfeHC0cGRvqZ+5Dmk2Q==}
+  '@geniusdynamics/ns8-ui-lib@1.0.8':
+    resolution: {integrity: sha512-2ICIstiO3xxU4g5ixBIb1erstmMblA9v06lj6/hPHE2Q82BOu9emlLITAPEO9mPANCgAJ8o95Y2IcWE1We6xlg==}
     engines: {node: '>=18'}
     peerDependencies:
       lucide-vue-next: ^0.562.0
@@ -1638,7 +1659,7 @@ snapshots:
       '@fortawesome/fontawesome-svg-core': 6.7.2
       vue: 3.5.30(typescript@5.9.3)
 
-  '@geniusdynamics/ns8-ui-lib@1.0.7(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))':
+  '@geniusdynamics/ns8-ui-lib@1.0.8(lucide-vue-next@0.577.0(vue@3.5.30(typescript@5.9.3)))(typescript@5.9.3)(vue-router@5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))':
     dependencies:
       '@tanstack/vue-table': 8.21.3(vue@3.5.30(typescript@5.9.3))
       '@vee-validate/zod': 4.15.1(vue@3.5.30(typescript@5.9.3))(zod@3.25.76)
