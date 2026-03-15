@@ -36,7 +36,7 @@ async function initApp() {
   app.provide("axios", axios);
 
   // Mount app
-  app.mount("#app");
+  app.mount("#ns8-app");
 }
 
 initApp().catch(console.error);
