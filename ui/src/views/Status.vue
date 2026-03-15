@@ -2,6 +2,317 @@
   Copyright (C) 2023 Nethesis S.r.l.
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { useAppStore } from "@/store";
+import {
+  NSInlineNotification,
+  NSSystemInfoCard,
+  NSSystemdServiceCard,
+  NSBackupCard,
+  NSEmptyState,
+  NSDataTable,
+} from "@geniusdynamics/ns8-ui-lib";
+import {
+  useTaskService,
+  usePageTitleService,
+  useUtilService,
+} from "@geniusdynamics/ns8-ui-lib";
+
+const store = useAppStore();
+const router = useRouter();
+const {
+  createModuleTaskForApp,
+  createClusterTaskForApp,
+  createErrorNotificationForApp,
+} = useTaskService();
+const { setPageTitle } = usePageTitleService();
+const { getUuid, sortByProperty } = useUtilService();
+const { t } = useI18n();
+
+// Data
+const host = ref("");
+const status = ref<{
+  instance: string;
+  services: Array<{
+    name: string;
+    active: boolean;
+    enabled: boolean;
+    failed: boolean;
+  }>;
+  images: Array<{ name: string; size: string; created: string }>;
+  volumes: Array<{ name: string; mount: string; created: string }>;
+  node: number | string | null;
+  node_ui_name: string | null;
+  ui_name: string | null;
+}>({
+  instance: "",
+  services: [],
+  images: [],
+  volumes: [],
+  node: null,
+  node_ui_name: null,
+  ui_name: null,
+});
+const backupRepositories = ref<Array<{ id: string; name: string }>>([]);
+const backups = ref<
+  Array<{
+    id: string;
+    name: string;
+    repository: string;
+    repoName?: string;
+    date: string;
+    size: string;
+    enabled: boolean;
+    status: "error" | "success" | "running" | "pending";
+  }>
+>([]);
+const loading = ref({
+  getStatus: false,
+  listBackupRepositories: false,
+  listBackups: false,
+  getConfiguration: false,
+});
+const error = ref({
+  getStatus: "",
+  listBackupRepositories: "",
+  listBackups: "",
+  getConfiguration: "",
+});
+
+// Computed
+const installationNodeTitle = computed(() => {
+  if (status.value?.node) {
+    if (status.value.node_ui_name) {
+      return status.value.node_ui_name;
+    } else {
+      return `${t("status.node")} ${status.value.node}`;
+    }
+  }
+  return "-";
+});
+
+const goToWebapp = () => {
+  window.open(`https://${host.value}`, "_blank");
+};
+
+const goToSettings = () => {
+  router.push("/settings");
+};
+
+const handleBackup = (backupId: string) => {
+  console.log("Backup:", backupId);
+};
+
+const handleRestore = (backupId: string) => {
+  console.log("Restore:", backupId);
+};
+
+const handleDeleteBackup = (backupId: string) => {
+  console.log("Delete backup:", backupId);
+};
+
+const handleServiceStart = (serviceName: string) => {
+  console.log("Start service:", serviceName);
+};
+
+const handleServiceStop = (serviceName: string) => {
+  console.log("Stop service:", serviceName);
+};
+
+const handleServiceRestart = (serviceName: string) => {
+  console.log("Restart service:", serviceName);
+};
+
+// Methods
+async function getConfiguration() {
+  loading.value.getConfiguration = true;
+  error.value.getConfiguration = "";
+  const taskAction = "get-configuration";
+  const eventId = getUuid();
+
+  store.core.$root.$once(
+    `${taskAction}-aborted-${eventId}`,
+    (taskResult: any, taskContext: any) => {
+      console.error(`${taskContext.action} aborted`, taskResult);
+      error.value.getConfiguration = "Failed to retrieve configuration";
+      loading.value.getConfiguration = false;
+    },
+  );
+
+  store.core.$root.$once(
+    `${taskAction}-completed-${eventId}`,
+    (_taskContext: any, taskResult: any) => {
+      console.log(taskResult);
+      const config = taskResult.output;
+      host.value = config.host || "";
+      loading.value.getConfiguration = false;
+    },
+  );
+
+  try {
+    await createModuleTaskForApp(store.instanceName, {
+      action: taskAction,
+      extra: {
+        title: t("action." + taskAction),
+        isNotificationHidden: true,
+        eventId,
+      },
+    });
+  } catch (err) {
+    console.error(`Error creating task ${taskAction}`, err);
+    error.value.getConfiguration = "Failed to retrieve configuration";
+    createErrorNotificationForApp(err, "Failed to get configuration");
+    loading.value.getConfiguration = false;
+  }
+}
+
+async function getStatus() {
+  loading.value.getStatus = true;
+  error.value.getStatus = "";
+  const taskAction = "get-status";
+  const eventId = getUuid();
+
+  store.core.$root.$once(
+    `${taskAction}-aborted-${eventId}`,
+    (taskResult: any, taskContext: any) => {
+      console.error(`${taskContext.action} aborted`, taskResult);
+      error.value.getStatus = "Failed to retrieve status";
+      loading.value.getStatus = false;
+    },
+  );
+
+  store.core.$root.$once(
+    `${taskAction}-completed-${eventId}`,
+    (_taskContext: any, taskResult: any) => {
+      console.log(taskResult);
+      status.value = taskResult.output;
+      loading.value.getStatus = false;
+    },
+  );
+
+  try {
+    await createModuleTaskForApp(store.instanceName, {
+      action: taskAction,
+      extra: {
+        title: t("action." + taskAction),
+        isNotificationHidden: true,
+        eventId,
+      },
+    });
+  } catch (err) {
+    console.error(`Error creating task ${taskAction}`, err);
+    error.value.getStatus = "Failed to retrieve status";
+    createErrorNotificationForApp(err, "Failed to get status");
+    loading.value.getStatus = false;
+  }
+}
+
+async function listBackupRepositories() {
+  loading.value.listBackupRepositories = true;
+  error.value.listBackupRepositories = "";
+  const taskAction = "list-backup-repositories";
+  const eventId = getUuid();
+
+  store.core.$root.$once(
+    `${taskAction}-aborted-${eventId}`,
+    (taskResult: any, taskContext: any) => {
+      console.error(`${taskContext.action} aborted`, taskResult);
+      error.value.listBackupRepositories = "Failed to list backup repositories";
+      loading.value.listBackupRepositories = false;
+    },
+  );
+
+  store.core.$root.$once(
+    `${taskAction}-completed-${eventId}`,
+    (_taskContext: any, taskResult: any) => {
+      console.log(taskResult);
+      const repositories = taskResult.output.repositories.sort(
+        sortByProperty("name"),
+      );
+      backupRepositories.value = repositories;
+      loading.value.listBackupRepositories = false;
+      listBackups();
+    },
+  );
+
+  try {
+    await createClusterTaskForApp({
+      action: taskAction,
+      extra: {
+        title: t("action." + taskAction),
+        isNotificationHidden: true,
+        eventId,
+      },
+    });
+  } catch (err) {
+    console.error("Error listing backup repositories", err);
+    error.value.listBackupRepositories = "Failed to list backup repositories";
+    loading.value.listBackupRepositories = false;
+  }
+}
+
+async function listBackups() {
+  loading.value.listBackups = true;
+  error.value.listBackups = "";
+  const taskAction = "list-backups";
+  const eventId = getUuid();
+
+  store.core.$root.$once(
+    `${taskAction}-aborted-${eventId}`,
+    (taskResult: any, taskContext: any) => {
+      console.error(`${taskContext.action} aborted`, taskResult);
+      error.value.listBackups = "Failed to list backups";
+      loading.value.listBackups = false;
+    },
+  );
+
+  store.core.$root.$once(
+    `${taskAction}-completed-${eventId}`,
+    (_taskContext: any, taskResult: any) => {
+      console.log(taskResult);
+
+      let backupList = taskResult.output.backups;
+      backupList.sort(sortByProperty("name"));
+
+      for (const backup of backupList) {
+        const repo = backupRepositories.value.find(
+          (r: any) => r.id == backup.repository,
+        );
+        if (repo) {
+          backup.repoName = repo.name;
+        }
+      }
+      backups.value = backupList;
+      loading.value.listBackups = false;
+    },
+  );
+
+  try {
+    await createClusterTaskForApp({
+      action: taskAction,
+      extra: {
+        title: t("action." + taskAction),
+        isNotificationHidden: true,
+        eventId,
+      },
+    });
+  } catch (err) {
+    console.error("Error listing backups", err);
+    error.value.listBackups = "Failed to list backups";
+    loading.value.listBackups = false;
+  }
+}
+
+onMounted(async () => {
+  setPageTitle(`${t("status.title")} - ${store.appName}`);
+  await getConfiguration();
+  await getStatus();
+  await listBackupRepositories();
+});
+</script>
 <template>
   <div class="status-view">
     <div class="page-header">
@@ -156,237 +467,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { useAppStore } from "@/store";
-import {
-  NSInlineNotification,
-  NSSystemInfoCard,
-  NSSystemdServiceCard,
-  NSBackupCard,
-  NSEmptyState,
-  NSDataTable,
-} from "@geniusdynamics/ns8-ui-lib";
-import {
-  useTaskService,
-  useQueryParamService,
-  usePageTitleService,
-} from "@geniusdynamics/ns8-ui-lib";
-
-const store = useAppStore();
-const route = useRoute();
-const router = useRouter();
-const {
-  createModuleTaskForApp,
-  createClusterTaskForApp,
-  createErrorNotificationForApp,
-} = useTaskService();
-const { getPage } = useQueryParamService();
-const { setPageTitle } = usePageTitleService();
-const { t } = useI18n();
-
-// Data
-const host = ref("");
-const status = ref({
-  instance: "",
-  services: [],
-  images: [],
-  volumes: [],
-  node: null,
-  node_ui_name: null,
-});
-const backupRepositories = ref([]);
-const backups = ref([]);
-const loading = ref({
-  getStatus: false,
-  listBackupRepositories: false,
-  listBackups: false,
-  getConfiguration: false,
-});
-const error = ref({
-  getStatus: "",
-  listBackupRepositories: "",
-  listBackups: "",
-  getConfiguration: "",
-});
-
-// Computed
-const installationNodeTitle = computed(() => {
-  if (status.value?.node) {
-    if (status.value.node_ui_name) {
-      return status.value.node_ui_name;
-    } else {
-      return `${t("status.node")} ${status.value.node}`;
-    }
-  }
-  return "-";
-});
-
-const goToWebapp = () => {
-  window.open(`https://${host.value}`, "_blank");
-};
-
-const goToSettings = () => {
-  router.push("/settings");
-};
-
-const handleBackup = (backupId: string) => {
-  console.log("Backup:", backupId);
-};
-
-const handleRestore = (backupId: string) => {
-  console.log("Restore:", backupId);
-};
-
-const handleDeleteBackup = (backupId: string) => {
-  console.log("Delete backup:", backupId);
-};
-
-const handleServiceStart = (serviceName: string) => {
-  console.log("Start service:", serviceName);
-};
-
-const handleServiceStop = (serviceName: string) => {
-  console.log("Stop service:", serviceName);
-};
-
-const handleServiceRestart = (serviceName: string) => {
-  console.log("Restart service:", serviceName);
-};
-
-// Methods
-async function getConfiguration() {
-  loading.value.getConfiguration = true;
-  error.value.getConfiguration = "";
-
-  try {
-    const taskAction = "get-configuration";
-    await createModuleTaskForApp(store.instanceName, {
-      action: taskAction,
-      extra: {
-        title: "Get Configuration",
-        isNotificationHidden: true,
-      },
-    });
-
-    // For demo purposes, set a sample host
-    host.value = "example.example.org";
-  } catch (err) {
-    console.error(`Error creating task ${taskAction}`, err);
-    error.value.getConfiguration = "Failed to retrieve configuration";
-    createErrorNotificationForApp(err, "Failed to get configuration");
-  } finally {
-    loading.value.getConfiguration = false;
-  }
-}
-
-async function getStatus() {
-  loading.value.getStatus = true;
-  error.value.getStatus = "";
-
-  try {
-    const taskAction = "get-status";
-    await createModuleTaskForApp(store.instanceName, {
-      action: taskAction,
-      extra: {
-        title: "Get Status",
-        isNotificationHidden: true,
-      },
-    });
-
-    // For demo purposes, set sample data
-    status.value = {
-      instance: store.instanceName,
-      services: [
-        { name: "example-app", active: true, enabled: true },
-        { name: "example-db", active: true, enabled: true },
-      ],
-      images: [
-        { name: "example:latest", size: "150 MB", created: "2024-01-15" },
-        { name: "postgres:14", size: "350 MB", created: "2024-01-10" },
-      ],
-      volumes: [
-        {
-          name: "example-data",
-          mount: "/var/lib/example",
-          created: "2024-01-15",
-        },
-      ],
-      node: 1,
-      node_ui_name: "Node 1",
-    };
-  } catch (err) {
-    console.error(`Error creating task ${taskAction}`, err);
-    error.value.getStatus = "Failed to retrieve status";
-    createErrorNotificationForApp(err, "Failed to get status");
-  } finally {
-    loading.value.getStatus = false;
-  }
-}
-
-async function listBackupRepositories() {
-  loading.value.listBackupRepositories = true;
-  error.value.listBackupRepositories = "";
-
-  try {
-    await createClusterTaskForApp({
-      action: "list-backup-repositories",
-      extra: {
-        title: "List Backup Repositories",
-        isNotificationHidden: true,
-      },
-    });
-  } catch (err) {
-    console.error("Error listing backup repositories", err);
-    error.value.listBackupRepositories = "Failed to list backup repositories";
-  } finally {
-    loading.value.listBackupRepositories = false;
-  }
-}
-
-async function listBackups() {
-  loading.value.listBackups = true;
-  error.value.listBackups = "";
-
-  try {
-    await createClusterTaskForApp({
-      action: "list-backups",
-      extra: {
-        title: "List Backups",
-        isNotificationHidden: true,
-      },
-    });
-
-    // For demo purposes, set sample backup data
-    backups.value = [
-      {
-        id: "backup-1",
-        name: "Daily Backup",
-        date: "2024-01-15 02:00",
-        size: "2.3 GB",
-        enabled: true,
-        status: "success",
-      },
-    ];
-  } catch (err) {
-    console.error("Error listing backups", err);
-    error.value.listBackups = "Failed to list backups";
-  } finally {
-    loading.value.listBackups = false;
-  }
-}
-
-onMounted(async () => {
-  setPageTitle(`${t("status.title")} - ${store.appName}`);
-  await getConfiguration();
-  await getStatus();
-  await listBackupRepositories();
-  await listBackups();
-});
-</script>
 
 <style scoped>
 .status-view {
