@@ -24,7 +24,6 @@ ExecStartPre=/usr/bin/podman pod create --infra-conmon-pidfile %t/postgresql.pid
     --name postgresql \
     --publish 127.0.0.1:${TCP_PORT_PGADMIN}:80 \
     --publish ${TCP_PORT_PGSQL}:5432 \
-    --publish 127.0.0.1:${TCP_PORT_PGADMIN}:8765 \
     --replace
 ExecStart=/usr/bin/podman pod start --pod-id-file %t/postgresql.pod-id
 ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/postgresql.pod-id -t 10
